@@ -20,6 +20,7 @@ Example:
 from docopt import docopt
 import requests
 import urllib.request
+from prettytable import PrettyTable
 
 def cli():
     """command-line interface"""
@@ -44,10 +45,40 @@ def cli():
               }
     #request = urllib.request.Request(url=url,headers=headers
     r = requests.get(url,verify=False)
-    print(r.status_code)
-    print(url)
-    available_trains = r.json()["data"]
-    print(available_trains)
+    #print(r.status_code)
+    #print(url)
+    available_trains = r.json()["data"]["s2sBeanList"]
+    return available_trains
+
+def seat(seat_name,tain_inf):
+	if tain_inf["seats"].get(seat_name):
+		return '\n'.join(map(str,(tain_inf["seats"][seat_name]["count"],tain_inf["seats"][seat_name]["price"])))+'元'
+	else:
+		return "--"
+
+def colored(color, text):
+    table = {
+        'red':'\033[91m',
+        'green':'\033[92m',
+        # no color
+        'nc':'\033[0'
+    }
+    cv = table.get(color)
+    nv = table.get('nc')
+    return ''.join([cv, text, nv])
+
+
+def tain(tains_inf):
+	title = PrettyTable(["车次","车站","时间","历时","商务座(余票/价格)","一等座(余票/价格)","二等座(余票/价格)","动卧(余票/价格)","无座(余票/价格)","硬座(余票/价格)","硬卧(余票/价格)","软卧(余票/价格)"])
+	title.align = "c"
+	title.valign = "m"
+	for tain_inf in tains_inf:
+		title.add_row([tain_inf["trainNo"],'\n'.join([tain_inf["dptStationName"],tain_inf["arrStationName"]]),\
+			'\n'.join([tain_inf["dptTime"],tain_inf["arrTime"]]),\
+			str(int(tain_inf["lishiValue"])//60)+'小时'+str(int(tain_inf["lishiValue"])%60)+'分钟',\
+			seat("商务座",tain_inf),seat("一等座",tain_inf),seat("二等座",tain_inf),seat("动卧",tain_inf),\
+			seat("无座",tain_inf),seat("硬座",tain_inf),seat("硬卧",tain_inf),seat("软卧",tain_inf)])
+	return title
 
 if __name__ == '__main__':
-    cli()
+    print(tain(cli()))
