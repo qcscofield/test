@@ -24,14 +24,14 @@ from prettytable import PrettyTable
 from tkinter import *
 from tkinter import ttk
 
-def cli():
+def cli(_from,_to,_date):
     """command-line interface"""
     #arguments = docopt(__doc__)
-    from_station = urllib.request.quote('北京')
-    to_station = urllib.request.quote('上海')
-    date = urllib.request.quote('2017-10-01')
+    from_station = urllib.request.quote(str(_from))
+    to_station = urllib.request.quote(str(_to))
+    date = urllib.request.quote(str(_date))
     url = ('https://train.qunar.com/dict/open/s2s.do?\
-    	&dptStation={}\
+&dptStation={}\
 &arrStation={}\
 &date={}\
 &type=normal\
@@ -48,7 +48,7 @@ def cli():
     #request = urllib.request.Request(url=url,headers=headers
     r = requests.get(url,verify=False)
     #print(r.status_code)
-    #print(url)
+    print(url)
     available_trains = r.json()["data"]["s2sBeanList"]
     return available_trains
 
@@ -84,36 +84,43 @@ def tain(tains_inf):
 
 def clickme():
 
-    Text(master,).insert(print(tain(cli())))
+    t.insert(1.0,tain(cli(e1.get(),e2.get(),year.get()+'-'+month.get()+'-'+day.get())))
 
-
+def clearme(te):
+    te.delete(1,END)
 
 master=Tk() #生成root主窗口
-Label(master,text='shekelin').grid(row=0,column=1)
-Label(master,text='qidian').grid(row=1)
-Label(master,text='zhongdian').grid(row=2)
+Label(master,text='shekelin').grid(row=0,columnspan=3)
+Label(master,text='起点').grid(row=1,sticky=E)
+Label(master,text='终点').grid(row=2,sticky=E)
 
-e1 = StringVar(master)
-Entry(master,textvariable=e1).grid(row=1,column=1)
-e2 = StringVar(master)
-Entry(master,textvariable=e2).grid(row=2,column=1)
+
+e1=Entry(master)
+e1.grid(row=1,column=1,sticky=W)
+
+e2=Entry(master)
+e2.grid(row=2,column=1,sticky=W)
+
+t=Text(master,width=150)
+t.grid(row=4,columnspan=3)
+
+
 
 Button(master,text='查询',command=clickme).grid(row=1,column=2)
 Button(master,text='清空').grid(row=2,column=2)
 
-Text(master).grid(row=4)
-
-
-
 number_year=StringVar(master)
 number_year.set("2017")
-year=ttk.Combobox(master,width=12,textvariable=number_year,values=["2016","2017"]).grid(row=3,column=0)
+year=ttk.Combobox(master,width=12,textvariable=number_year,values=["2016","2017"])
+year.grid(row=3,column=0)
 number_month=StringVar(master)
-number_month.set("1")
-month=ttk.Combobox(master,width=12,textvariable=number_month,values=list(range(1,13))).grid(row=3,column=1)
+number_month.set("01")
+month=ttk.Combobox(master,width=12,textvariable=number_month,values=['01','02','03','04','05','06','07','08','09','10','11','12'])
+month.grid(row=3,column=1)
 number_day=StringVar(master)
-number_day.set("1")
-day=ttk.Combobox(master,width=12,textvariable=number_day,values=list(range(1,32))).grid(row=3,column=2)
+number_day.set("01")
+day=ttk.Combobox(master,width=12,textvariable=number_day,values=['01','02','03','04','05','06','07','08','09','10','11','12']+list(range(13,32)))
+day.grid(row=3,column=2)
 
 
 
