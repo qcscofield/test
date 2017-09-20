@@ -86,8 +86,8 @@ def clickme():
 
     t.insert(1.0,tain(cli(e1.get(),e2.get(),year.get()+'-'+month.get()+'-'+day.get())))
 
-def clearme(te):
-    te.delete(1,END)
+def clearme():
+    t.delete(1.0,END)
 
 master=Tk() #生成root主窗口
 Label(master,text='shekelin').grid(row=0,columnspan=3)
@@ -107,7 +107,7 @@ t.grid(row=4,columnspan=3)
 
 
 Button(master,text='查询',command=clickme).grid(row=1,column=2)
-Button(master,text='清空').grid(row=2,column=2)
+Button(master,text='清空',command=clearme).grid(row=2,column=2)
 
 number_year=StringVar(master)
 number_year.set("2017")
