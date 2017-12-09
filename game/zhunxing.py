@@ -6,7 +6,7 @@ Py40 PyQt5 tutorial
 This program centers a window
 on the screen.
 
-author: QC
+author: QiuChen
 last edited: 12 2017
 """
 
@@ -59,8 +59,8 @@ class Example(QWidget):
         pen = QPen(Qt.red, 1, Qt.SolidLine)
 
         qp.setPen(pen)
-        qp.drawLine(40, 50, 60, 50)
-        qp.drawLine(50, 40, 50, 60)
+        qp.drawLine(40, 70, 60, 70)
+        qp.drawLine(50, 60, 50, 80)
 
 
 if __name__ == '__main__':
